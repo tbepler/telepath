@@ -1,3 +1,3 @@
-# template-lapack
+# telepath
 
-C++ template interface to BLAS and LAPACK routines
+Mid/low-level C++ template linear algebra library build on BLAS and LAPACK
