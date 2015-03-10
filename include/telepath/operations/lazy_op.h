@@ -1,0 +1,8 @@
+#ifndef INCLUDED_TELEPATH_OPERATIONS_LAZY_OP_H
+#define INCLUDED_TELEPATH_OPERATIONS_LAZY_OP_H
+
+namespace telepath{
+
+}
+
+#endif

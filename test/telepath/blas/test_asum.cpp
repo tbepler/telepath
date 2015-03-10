@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "telepath/blas.h"
+#include "telepath/blas/blas_1.h"
 
 #include <limits>
 
