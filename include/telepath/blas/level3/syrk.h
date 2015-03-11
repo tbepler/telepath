@@ -1,10 +1,10 @@
-#ifndef INCLUDED_TELEPATH_BLAS_3_SYRK_H
-#define INCLUDED_TELEPATH_BLAS_3_SYRK_H
+#ifndef INCLUDED_BLAS_L3_SYRK_H
+#define INCLUDED_BLAS_L3_SYRK_H
 
 #include <complex>
 #include <cblas.h>
 
-namespace telepath{
+namespace blas{
     
     void syrk( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE trans,
         std::size_t n, std::size_t k, float alpha, const float* A,
@@ -36,6 +36,6 @@ namespace telepath{
             (double*) A, lda, (double*) beta, (double*) C, ldc );
     }
 
-} //namespace telepath
+} //namespace blas
 
 #endif

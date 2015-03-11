@@ -9,6 +9,11 @@ using namespace telepath;
 TEST( BLAS_SyrkMat, Eval ){
     
     double arrayA[] = { 1, 3, 5, 2, 4, 6 };
+    /*
+    1 2
+    3 4
+    5 6
+    */
     matrix<double> A = {
         COL_MAJOR,
         NONE,
@@ -29,8 +34,28 @@ TEST( BLAS_SyrkMat, Eval ){
     };
     std::vector<double> expect = { 5, 0, 0, 11, 25, 0, 17, 39, 61 };
 
-    syrk( 1, A, 1, C );
+    blas::syrk( A, C );
     EXPECT_EQ( expect, arrayC );
 
+    /*
+    1 3 5
+    2 4 6
+    */
+    matrix<double> Atrans = A;
+    Atrans.trans = TRANS;
+    std::vector<double> arrayCtrans( 4 );
+    sym_matrix<double> Ctrans = {
+        COL_MAJOR,
+        NONE,
+        UPPER,
+        &arrayCtrans[0],
+        2,
+        2,
+        2
+    };
+    std::vector<double> expect_trans = { 35, 0, 44, 56 };
+
+    blas::syrk( Atrans, Ctrans );
+    EXPECT_EQ( expect_trans, arrayCtrans );
  
 }

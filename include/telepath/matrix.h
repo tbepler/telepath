@@ -2,6 +2,7 @@
 #define INCLUDED_TELEPATH_MATRIX_H
 
 #include <cblas.h>
+#include "telepath/blas/traits.h"
 
 namespace telepath{
 
@@ -16,7 +17,7 @@ namespace telepath{
     };
     enum UPLO{
         UPPER = CblasUpper,
-        LOWER = CblasLower
+        LOWER = CblasLower,
     };
 
     /*
@@ -33,21 +34,6 @@ namespace telepath{
     };
 
     template< typename T >
-    inline ORDER layout( const matrix<T>& mat ){ return mat.layout; }
-    template< typename T >
-    inline TRANSPOSE getTrans( const matrix<T>& mat ){ return mat.trans; }
-    template< typename T >
-    inline T* array( matrix<T>& mat ){ return mat.array; }
-    template< typename T >
-    inline const T* array( const matrix<T>& mat ){ return mat.array; }
-    template< typename T >
-    inline auto nrows( const matrix<T>& mat ){ return mat.rows; }
-    template< typename T >
-    inline auto ncols( const matrix<T>& mat ){ return mat.cols; }
-    template< typename T >
-    inline auto ldInc( const matrix<T>& mat ){ return mat.ld; }
-
-    template< typename T >
     struct sym_matrix{
         ORDER layout;
         TRANSPOSE trans;
@@ -58,23 +44,47 @@ namespace telepath{
         std::size_t ld;
     };
 
-    template< typename T >
-    inline ORDER layout( const sym_matrix<T>& mat ){ return mat.layout; }
-    template< typename T >
-    inline TRANSPOSE getTrans( const sym_matrix<T>& mat ){ return mat.trans; }
-    template< typename T >
-    inline UPLO uplo( const sym_matrix<T>& mat ){ return mat.uplo; }
-    template< typename T >
-    inline T* array( sym_matrix<T>& mat ){ return mat.array; }
-    template< typename T >
-    inline const T* array( const sym_matrix<T>& mat ){ return mat.array; }
-    template< typename T >
-    inline auto nrows( const sym_matrix<T>& mat ){ return mat.rows; }
-    template< typename T >
-    inline auto ncols( const sym_matrix<T>& mat ){ return mat.cols; }
-    template< typename T >
-    inline auto ldInc( const sym_matrix<T>& mat ){ return mat.ld; }
-
 } //namespace telepath
+
+namespace blas{
+
+    template< typename T >
+    struct MatrixTraits< telepath::matrix<T> >{
+        using mat = typename telepath::matrix<T>;
+        using scalar_t = T;
+        constexpr static CBLAS_ORDER layout( const mat& m ){
+            return (CBLAS_ORDER) m.layout;
+        }
+        constexpr static CBLAS_TRANSPOSE trans( const mat& m ){
+            return (CBLAS_TRANSPOSE) m.trans;
+        }
+        constexpr static auto nrows( const mat& m ){ return m.rows; }
+        constexpr static auto ncols( const mat& m ){ return m.cols; }
+        constexpr static T* array( mat& m ){ return m.array; }
+        constexpr static const T* array( const mat& m ){ return m.array; }
+        constexpr static auto ld( const mat& m ){ return m.ld; }
+    };
+    
+    template< typename T >
+    struct MatrixTraits< telepath::sym_matrix<T> >{
+        using mat = typename telepath::sym_matrix<T>;
+        using scalar_t = T;
+        constexpr static CBLAS_ORDER layout( const mat& m ){
+            return (CBLAS_ORDER) m.layout;
+        }
+        constexpr static CBLAS_TRANSPOSE trans( const mat& m ){
+            return (CBLAS_TRANSPOSE) m.trans;
+        }
+        constexpr static CBLAS_UPLO uplo( const mat& m ){
+            return (CBLAS_UPLO) m.uplo;
+        }
+        constexpr static auto nrows( const mat& m ){ return m.rows; }
+        constexpr static auto ncols( const mat& m ){ return m.cols; }
+        constexpr static T* array( mat& m ){ return m.array; }
+        constexpr static const T* array( const mat& m ){ return m.array; }
+        constexpr static auto ld( const mat& m ){ return m.ld; }
+    };
+
+} //namespace blas
 
 #endif
