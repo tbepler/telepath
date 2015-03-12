@@ -114,6 +114,16 @@ namespace blas{
     } //namespace matrix
 
     template< typename T >
+    inline auto blas_matrix( T& x ){
+        return matrix::Mat<T>( x );
+    }
+
+    template< typename T >
+    inline auto blas_matrix( const T& x ){
+        return matrix::ConstMat<T>( x );
+    }
+
+    template< typename T >
     struct MatrixTraits< matrix::Mat<T> >
         : public MatrixTraits< typename matrix::Mat<T>::mat_t > { };
     

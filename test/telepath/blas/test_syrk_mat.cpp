@@ -6,6 +6,16 @@
 
 using namespace telepath;
 
+template< typename T >
+class Matrix{
+    std::vector<T> data_;
+    std::size_t rows_;
+    std::size_t cols_;
+    public:
+        constexpr Matrix( std::size_t rows, std::size_t cols )
+            : data_( rows*cols ), rows_( rows ), cols_( cols ) { }
+};
+
 TEST( BLAS_SyrkMat, Eval ){
     
     double arrayA[] = { 1, 3, 5, 2, 4, 6 };

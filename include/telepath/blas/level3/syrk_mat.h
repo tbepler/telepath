@@ -6,38 +6,46 @@
 #include <assert.h>
 
 namespace blas{
-    
-    template< typename T, typename U, typename V >
-    //inline void syrk( T alpha, const U& A, T beta, V& C ){
-    inline void syrk( T alpha, matrix::ConstMat<U> A, T beta,
-        matrix::Mat<V> C ){
-        
-        using namespace matrix;
-        assert( layout( A ) == layout( C ) );
-        assert( nrows(C) == ncols(C) );
-        assert( ld(C) >= nrows(C) );
-        assert( uplo(C) == CblasUpper || uplo(C) == CblasLower );
-        if( trans(A) == CblasNoTrans ){
-            assert( nrows(A) == nrows(C) );
-            assert( ld(A) >= nrows(A) );
-        }else{
-            assert( ncols(A) == nrows(C) );
-            assert( ld(A) >= ncols(A) );
+
+    namespace syrk_detail{
+
+        template< typename T, typename U, typename V >
+        inline void syrk_impl( T alpha, U&& A, T beta,
+            V&& C ){
+            
+            //using namespace matrix;
+            assert( layout( A ) == layout( C ) );
+            assert( nrows(C) == ncols(C) );
+            assert( ld(C) >= nrows(C) );
+            assert( uplo(C) == CblasUpper || uplo(C) == CblasLower );
+            if( trans(A) == CblasNoTrans ){
+                assert( nrows(A) == nrows(C) );
+                assert( ld(A) >= nrows(A) );
+            }else{
+                assert( ncols(A) == nrows(C) );
+                assert( ld(A) >= ncols(A) );
+            }
+
+            syrk( 
+                (CBLAS_ORDER) layout( A ),
+                (CBLAS_UPLO) uplo( C ),
+                (CBLAS_TRANSPOSE) trans( A ),
+                nrows( C ),
+                trans( A ) == CblasNoTrans ? ncols( A ) : nrows( A ),
+                alpha,
+                array( A ),
+                ld( A ),
+                beta,
+                array( C ),
+                ld( C )
+            );
         }
 
-        syrk( 
-            (CBLAS_ORDER) layout( A ),
-            (CBLAS_UPLO) uplo( C ),
-            (CBLAS_TRANSPOSE) trans( A ),
-            nrows( C ),
-            trans( A ) == CblasNoTrans ? ncols( A ) : nrows( A ),
-            alpha,
-            array( A ),
-            ld( A ),
-            beta,
-            array( C ),
-            ld( C )
-        );
+    } //namespace syrk_detail
+    
+    template< typename T, typename U, typename V >
+    inline void syrk( T alpha, const U& A, T beta, V& C ){
+        syrk_detail::syrk_impl( alpha, blas_cast(A), beta, blas_cast(C) );
     }
 
     template< typename T, typename U, typename V >

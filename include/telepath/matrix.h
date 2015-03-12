@@ -49,6 +49,62 @@ namespace telepath{
 namespace blas{
 
     template< typename T >
+    struct Traits< const telepath::matrix<T> >{
+        using mat_t = typename telepath::matrix<T>;
+        const mat_t& mat;
+        constexpr Traits( const mat_t& m ) : mat( m ) { }
+        constexpr telepath::ORDER layout() const{ return mat.layout; }
+        constexpr telepath::TRANSPOSE trans() const{ return mat.trans; }
+        constexpr const T* array() const{ return mat.array; }
+        constexpr auto nrows() const{ return mat.rows; }
+        constexpr auto ncols() const{ return mat.cols; }
+        constexpr auto ld() const{ return mat.ld; }
+    };
+    
+    template< typename T >
+    struct Traits< telepath::matrix<T> >{
+        using mat_t = typename telepath::matrix<T>;
+        mat_t& mat;
+        constexpr Traits( mat_t& m ) : mat( m ) { }
+        constexpr telepath::ORDER layout() const{ return mat.layout; }
+        constexpr telepath::TRANSPOSE trans() const{ return mat.trans; }
+        inline T* array() { return mat.array; }
+        constexpr const T* array() const{ return mat.array; }
+        constexpr auto nrows() const{ return mat.rows; }
+        constexpr auto ncols() const{ return mat.cols; }
+        constexpr auto ld() const{ return mat.ld; }
+    };
+    
+    template< typename T >
+    struct Traits< const telepath::sym_matrix<T> >{
+        using mat_t = telepath::sym_matrix<T>;
+        const mat_t& mat;
+        constexpr Traits( const mat_t& m ) : mat( m ) { }
+        constexpr telepath::ORDER layout() const{ return mat.layout; }
+        constexpr telepath::TRANSPOSE trans() const{ return mat.trans; }
+        constexpr telepath::UPLO uplo() const{ return mat.uplo; }
+        constexpr const T* array() const{ return mat.array; }
+        constexpr auto nrows() const{ return mat.rows; }
+        constexpr auto ncols() const{ return mat.cols; }
+        constexpr auto ld() const{ return mat.ld; }
+    };
+    
+    template< typename T >
+    struct Traits< telepath::sym_matrix<T> >{
+        using mat_t = typename telepath::sym_matrix<T>;
+        mat_t& mat;
+        constexpr Traits( mat_t& m ) : mat( m ) { }
+        constexpr telepath::ORDER layout() const{ return mat.layout; }
+        constexpr telepath::TRANSPOSE trans() const{ return mat.trans; }
+        constexpr telepath::UPLO uplo() const{ return mat.uplo; }
+        constexpr const T* array() const{ return mat.array; }
+        inline T* array() { return mat.array; }
+        constexpr auto nrows() const{ return mat.rows; }
+        constexpr auto ncols() const{ return mat.cols; }
+        constexpr auto ld() const{ return mat.ld; }
+    };
+
+    template< typename T >
     struct MatrixTraits< telepath::matrix<T> >{
         using mat = typename telepath::matrix<T>;
         using scalar_t = T;
